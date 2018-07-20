@@ -46,8 +46,27 @@
         <activity android:name=".tab3" />
         <activity android:name=".tab4" />
         <activity android:name=".Scheduler" />
+
         <activity
-            android:name=".editConfig"
+            android:name=".configurationTypeSelector"
+            android:label="configuration_type_selector"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.linminitools.mysync.MainActivity" />
+
+        <activity
+            android:name=".addRemoteShellConfig"
+            android:label="add_remote_shell_config"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.linminitools.mysync.MainActivity" />
+
+        <activity
+            android:name=".editDaemonConfig"
             android:label="@string/edit_config"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -65,7 +84,7 @@
                 android:value="com.linminitools.mysync.MainActivity" />
         </activity>
         <activity
-            android:name=".addConfig"
+            android:name=".addDaemonConfig"
             android:label="@string/title_activity_add_config"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

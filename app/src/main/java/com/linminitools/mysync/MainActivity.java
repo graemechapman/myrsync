@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createConfig(View v){
 
-        Intent i = new Intent(this,addConfig.class);
+        Intent i = new Intent(this,configurationTypeSelector.class);
         startActivityForResult(i,1);
 
         }
@@ -528,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (v.getTag(R.id.bt_edit)!=null) {
             int pos = (int) v.getTag(R.id.bt_edit);
-            Intent intent = new Intent(this,editConfig.class);
+            Intent intent = new Intent(this,editDaemonConfig.class);
             intent.putExtra("pos",pos);
             startActivity(intent);
         }

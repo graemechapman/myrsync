@@ -1,5 +1,6 @@
 package com.linminitools.mysync;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.linminitools.mysync.MainActivity.configs;
 
 
-class customAdapter extends BaseAdapter {
+class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
         Context context;
         String[] data;
@@ -67,6 +69,7 @@ class customAdapter extends BaseAdapter {
         }
 
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View vi = convertView;
@@ -155,7 +158,93 @@ class customAdapter extends BaseAdapter {
 
 
                 }
+                else if(this.fromTab==21){ //tab21 = tab2, 1st Child Listview = Expandable ListView for Daemon Rsync Configuration
+                    if (position==0) vi=inflater.inflate(R.layout.add_daemon_config, null);
+                    if (position==1) vi=inflater.inflate(R.layout.add_remote_shell_config, null);
+                }
+
 
         return vi;
         }
+
+    @Override
+    public int getGroupCount() {
+        Log.d("ADAPTER", "GetGroupCount");
+            return 2;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        Log.d("ADAPTER", "getChildrenCount");
+            return 1;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        Log.d("ADAPTER", "GetGroup");
+            return data[groupPosition];
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        Log.d("ADAPTER", "GET CHILD" + this.data[groupPosition]);
+            return this.data[groupPosition] ;
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        Log.d("ADAPTER", "GetGroupId");
+            return 0;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        Log.d("ADAPTER", "GetChildId");
+            return 0;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        Log.d("ADAPTER", "getGroupView");
+        View vi = convertView;
+        if (groupPosition==0) vi=inflater.inflate(android.R.layout.simple_expandable_list_item_2, null);
+        if (groupPosition==1) vi=inflater.inflate(android.R.layout.simple_expandable_list_item_2, null);
+        return vi;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        Log.d("ADAPTER", "GetChildView");
+        View vi = convertView;
+        if (childPosition==0) vi=inflater.inflate(R.layout.add_daemon_config, null);
+        if (childPosition==1) vi=inflater.inflate(R.layout.add_remote_shell_config, null);
+        return vi;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
+    }
+
+    @Override
+    public void onGroupExpanded(int groupPosition) {
+        Log.d("ADAPTER", "OnGroupExpanded");
+    }
+
+    @Override
+    public void onGroupCollapsed(int groupPosition) {
+        Log.d("ADAPTER", "onGroupCollapsed");
+    }
+
+    @Override
+    public long getCombinedChildId(long groupId, long childId) {
+        Log.d("ADAPTER", "GetCombinedChildID");
+            return 0;
+    }
+
+    @Override
+    public long getCombinedGroupId(long groupId) {
+        Log.d("ADAPTER", "getCombinedGroupId");
+        return 0;
+    }
 }

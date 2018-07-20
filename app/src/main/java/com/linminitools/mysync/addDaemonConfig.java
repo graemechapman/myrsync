@@ -25,14 +25,14 @@ import static com.linminitools.mysync.MainActivity.configs;
 import static com.linminitools.mysync.MainActivity.getPath;
 
 
-public class addConfig extends AppCompatActivity {
+public class addDaemonConfig extends AppCompatActivity {
 
     private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_config);
+        setContentView(R.layout.add_daemon_config);
         Button save = findViewById(R.id.bt_save);
         Button view = findViewById(R.id.bt_view);
         save.setEnabled(false);
@@ -98,26 +98,6 @@ public class addConfig extends AppCompatActivity {
 
 
         String options="-";
-        /*
-        CheckBox cba= findViewById(R.id.cb_a);
-        CheckBox cbr= findViewById(R.id.cb_r);
-        CheckBox cbz= findViewById(R.id.cb_z);
-        CheckBox cbv= findViewById(R.id.cb_v);
-
-        if (cba.isChecked()) {
-            options=options.concat("a");
-        }
-        if (cbr.isChecked()) {
-            options=options.concat("r");
-        }
-        if (cbz.isChecked()) {
-            options=options.concat("z");
-        }
-        if (cbv.isChecked()) {
-            options=options.concat("v");
-        }
-        */
-
 
         String[] availableOptions={"a","r","z","v","n","p","t","O","q","m","u","g"};
 
