@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,26 +22,27 @@ import static com.linminitools.mysync.MainActivity.configs;
 class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
         Context context;
-        String[] data;
+        String[] data_toString;
         private static LayoutInflater inflater = null;
         private int fromTab;
-        private ArrayList<Scheduler> original_data = new ArrayList<>();
-
+        private ArrayList<Scheduler> Scheduler_List = new ArrayList<>();
+        private ArrayList<String> Headers = new ArrayList<>();
 
 
         public customAdapter(Context context, ArrayList<?> data, int request_code) {
         this.context = context;
-        this.data=new String[data.size()];
+        data_toString=new String[data.size()];
         this.fromTab=request_code;
-
+        
+        if (request_code==21) Headers = (ArrayList<String>) data;
 
         if (!data.isEmpty()) {
             for (Object c : data) {
 
-                if (fromTab==2) this.data[data.indexOf(c)] = ((RS_Configuration) c).name;
+                if (fromTab==2) data_toString[data.indexOf(c)] = ((RS_Configuration) c).name;
                 else if (fromTab==1 || fromTab==3) {
-                    this.data[data.indexOf(c)] = c.getClass().getName();
-                    original_data.add(((Scheduler) c));
+                    data_toString[data.indexOf(c)] = c.getClass().getName();
+                    Scheduler_List.add(((Scheduler) c));
                 }
 
             }
@@ -53,13 +55,13 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         @Override
         public int getCount() {
         // TODO Auto-generated method stub
-        return data.length;
+        return data_toString.length;
         }
 
         @Override
         public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return data[position];
+        return data_toString[position];
         }
 
         @Override
@@ -86,7 +88,7 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
                     ImageView error = vi.findViewById(R.id.img_error_status);
                     error.setVisibility(View.INVISIBLE);
 
-                    Scheduler sched = original_data.get(position);
+                    Scheduler sched = Scheduler_List.get(position);
                     RS_Configuration conf;
                     try{
                         conf= configs.get(sched.config_pos);
@@ -118,14 +120,14 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
                 else if (this.fromTab==2) {
                     vi = inflater.inflate(R.layout.row, null);
                     TextView text = vi.findViewById(R.id.list_item_id);
-                    text.setText(data[position]);
+                    text.setText(data_toString[position]);
                     vi.findViewById(R.id.bt_edit).setTag(R.id.bt_edit, position);
                     vi.findViewById(R.id.bt_delete).setTag(R.id.bt_delete, position);
                 }
                 else if (this.fromTab==3 ) {
                     vi = inflater.inflate(R.layout.row_sched, null);
 
-                    Scheduler sched = original_data.get(position);
+                    Scheduler sched = Scheduler_List.get(position);
                     TextView tv_name = vi.findViewById(R.id.tv_sched_name);
                     tv_name.setText(sched.name);
 
@@ -182,13 +184,13 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
     @Override
     public Object getGroup(int groupPosition) {
         Log.d("ADAPTER", "GetGroup");
-            return data[groupPosition];
+            return Headers.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        Log.d("ADAPTER", "GET CHILD" + this.data[groupPosition]);
-            return this.data[groupPosition] ;
+        Log.d("ADAPTER", "GET CHILD" + data_toString[groupPosition]);
+            return 0 ;
     }
 
     @Override
@@ -207,8 +209,9 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         Log.d("ADAPTER", "getGroupView");
         View vi = convertView;
-        if (groupPosition==0) vi=inflater.inflate(android.R.layout.simple_expandable_list_item_2, null);
-        if (groupPosition==1) vi=inflater.inflate(android.R.layout.simple_expandable_list_item_2, null);
+        vi=inflater.inflate(R.layout.expandable_item, parent,false);
+        TextView header= vi.findViewById(R.id.tv_expandable_item);
+        header.setText(Headers.get(groupPosition));
         return vi;
     }
 
@@ -216,8 +219,17 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         Log.d("ADAPTER", "GetChildView");
         View vi = convertView;
-        if (childPosition==0) vi=inflater.inflate(R.layout.add_daemon_config, null);
-        if (childPosition==1) vi=inflater.inflate(R.layout.add_remote_shell_config, null);
+        if (groupPosition==0) {
+
+            addDaemonConfig d = new addDaemonConfig(context,parent);
+            vi=d.vi;
+            Button save = d.save_config;
+            Button view_cmd = d.view_cmd;
+            Button add_path = d.add_path;
+
+
+        }
+        if (groupPosition==1) vi=inflater.inflate(R.layout.add_remote_shell_config, parent,false);
         return vi;
     }
 
@@ -228,7 +240,7 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
     @Override
     public void onGroupExpanded(int groupPosition) {
-        Log.d("ADAPTER", "OnGroupExpanded");
+
     }
 
     @Override

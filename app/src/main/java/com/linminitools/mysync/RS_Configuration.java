@@ -20,7 +20,7 @@ public class RS_Configuration {
 
     protected String rs_ip, rs_user, rs_module, rs_options, local_path,name;
     protected String rs_port="873";
-    protected  int id;
+    protected  int id, mode;
 
     RS_Configuration(int id){
         this.id=id;

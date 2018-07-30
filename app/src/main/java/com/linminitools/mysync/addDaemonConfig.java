@@ -1,5 +1,6 @@
 package com.linminitools.mysync;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +11,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,22 +32,57 @@ import static com.linminitools.mysync.MainActivity.getPath;
 public class addDaemonConfig extends AppCompatActivity {
 
     private int id;
+    public Button save_config,view_cmd,add_path;
+    public EditText ed_user;
+    public LayoutInflater inflater;
+    public View vi =null;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_daemon_config);
+        //setContentView(R.layout.add_daemon_config);
+        //inflater=(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //vi=inflater.inflate(R.layout.add_daemon_config,null);
         Button save = findViewById(R.id.bt_save);
         Button view = findViewById(R.id.bt_view);
         save.setEnabled(false);
         view.setEnabled(false);
     }
 
+    public addDaemonConfig(){};
+
+    public addDaemonConfig(Context ctx, ViewGroup parent){
+
+        Log.d("Parent" , String.valueOf(parent));
+        Log.d("View", String.valueOf(vi));
+        inflater=(LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        vi=inflater.inflate(R.layout.add_daemon_config,parent,false);
+        context=ctx;
+        add_path=vi.findViewById(R.id.bt_add);
+        add_path.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addPath(view,context);
+            }
+        });
+        /*
+        save_config = vi.findViewById(R.id.bt_save);
+        view_cmd = vi.findViewById(R.id.bt_view);
+        add_path = vi.findViewById(R.id.bt_add);
+                vi=inflater.inflate(R.layout.add_daemon_config,null);
+
+        ed_user = vi.findViewById(R.id.ed_rsync_user);
+        save_config.setEnabled(false);
+        view_cmd.setEnabled(false);
+        */
+    };
 
 
-    public void addPath(View v){
+    public void addPath(View v, Context context){
         Uri selectedUri = Uri.parse(Environment.getDataDirectory().toString());
-        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE,selectedUri,context, Activity.class);
+
         startActivityForResult(Intent.createChooser(i,"Choose Directory"),1);
     }
 
