@@ -31,7 +31,9 @@ public class tab2 extends android.support.v4.app.Fragment {
         customAdapter adapter = new customAdapter(c,configs,2);
 
         lv_configs.setAdapter(adapter);
+
     }
+
 
 }
 

@@ -3,28 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/add_remote_shell_Config"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tv_RemoteShellConfig"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Add Remote Shell Configuration"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="wrap_content">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_RemoteShellConfig">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,21 +21,66 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/textView7"
-                    android:layout_width="150dp"
+                <TextView
+                    android:id="@+id/tv_selected_path"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/background_light"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:textIsSelectable="true"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_remote_dir" />
+
+                <ImageButton
+                    android:id="@+id/bt_keys_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="rsync Help Button"
+                    android:onClick="rsync_help"
+                    app:layout_constraintStart_toEndOf="@+id/bt_generate_ssh_keys"
+                    app:layout_constraintTop_toBottomOf="@+id/bt_add_local_path"
+                    app:srcCompat="@android:drawable/ic_menu_help" />
+
+                <Button
+                    android:id="@+id/bt_add_local_path"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/add_path"
+                    android:onClick="addPath"
+                    android:text="@string/add_path"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_selected_path" />
+
+                <EditText
+                    android:id="@+id/et_rsh_user"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
                     android:hint="User"
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                    app:layout_constraintBaseline_toBaselineOf="@+id/et_rsh_host"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/et_rsh_host" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/tv_rsh_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_marginEnd="8dp"
@@ -62,30 +93,301 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/textView6"
+                    android:id="@+id/et_rsh_host"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:hint="Host IP"
+                    android:hint="Remote Host IP"
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_rsh_settings" />
+
+                <EditText
+                    android:id="@+id/et_remote_dir"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Remote Directory (Destination)"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_rsh_host" />
 
                 <Button
-                    android:id="@+id/bt_saveRSHConfig"
+                    android:id="@+id/bt_generate_ssh_keys"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:onClick="generate_keys"
+                    android:text="Generate SSH Keypair"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bt_add_local_path" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rs_opt"
+                android:text="@string/opt"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="16dp">
+
+                <CheckBox
+                    android:id="@+id/cb_n"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-n"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/cb_a"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_a" />
+
+                <CheckBox
+                    android:id="@+id/cb_g"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-g"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cb_O"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_O" />
+
+                <CheckBox
+                    android:id="@+id/cb_m"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-m"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cb_p"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_p" />
+
+                <CheckBox
+                    android:id="@+id/cb_u"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-u"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cb_t"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_t" />
+
+                <CheckBox
+                    android:id="@+id/cb_q"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-q"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cb_n"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_n" />
+
+                <CheckBox
+                    android:id="@+id/cb_p"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-p"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/cb_r"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_r" />
+
+                <CheckBox
+                    android:id="@+id/cb_t"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-t"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/cb_z"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_z" />
+
+                <CheckBox
+                    android:id="@+id/cb_O"
+                    android:layout_width="54dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="16dp"
+                    android:checked="false"
+                    android:hint="-O"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="@+id/cb_v"
+                    app:layout_constraintTop_toBottomOf="@+id/cb_v" />
+
+                <CheckBox
+                    android:id="@+id/cb_a"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:hint="@string/a"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/cb_r"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/cb_r"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/r"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/cb_z"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cb_a"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/cb_z"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/z"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/cb_v"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/cb_r"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/cb_v"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/v"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/bt_help_rsync"
+                    app:layout_constraintStart_toEndOf="@+id/cb_z"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/bt_help_rsync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="rsync Help Button"
+                    android:onClick="rsync_help"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_menu_help" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_save_rsh_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_and_view_command"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/bt_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:onClick=""
+                    android:text="@string/view_command"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_rsync_command"
+                    android:layout_width="181dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:text="@string/button_save"
+                    android:text="@string/generated_rsync_command"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bt_view" />
+
+                <TextView
+                    android:id="@+id/tv_rs_cmd_View"
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    android:textIsSelectable="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_rsync_command" />
+
+                <Button
+                    android:id="@+id/bt_save"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:onClick="saveConfig"
+                    android:text="@string/save"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_rs_cmd_View"
+                    app:layout_constraintVertical_bias="0.035" />
+
+                <Button
+                    android:id="@+id/bt_execute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Run Now!"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_rs_cmd_View" />
+
             </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

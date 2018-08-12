@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Scheduler> schedulers = new ArrayList<>();
     public static Context appContext;
     public static Map<String,Boolean> settings = new HashMap<>();
+    public static String PackageName;
 
 
     @Override
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         appContext=getApplicationContext();
         configs.clear();
         schedulers.clear();
+        PackageName=appContext.getPackageName();
 
         Boolean is_first_run = getSharedPreferences("Install",MODE_PRIVATE).getBoolean("first_run",true);
 
@@ -114,13 +116,24 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 RS_Configuration config = new RS_Configuration(i);
-                config.rs_user=config_prefs.getString("rs_user_"+String.valueOf(i),"");
-                config.rs_ip = config_prefs.getString("rs_ip_"+String.valueOf(i), "");
-                config.rs_port = config_prefs.getString("rs_port_"+String.valueOf(i), "");
-                config.rs_options = config_prefs.getString("rs_options_"+String.valueOf(i),"");
-                config.rs_module = config_prefs.getString("rs_module_"+String.valueOf(i), "");
-                config.local_path = config_prefs.getString("local_path_"+String.valueOf(i), "");
-                configs.add(config);
+                config.mode=config_prefs.getInt("mode_"+String.valueOf(i),0);
+                if (config.mode==0) {
+                    config.rs_user = config_prefs.getString("rs_user_" + String.valueOf(i), "");
+                    config.rs_ip = config_prefs.getString("rs_ip_" + String.valueOf(i), "");
+                    config.rs_port = config_prefs.getString("rs_port_" + String.valueOf(i), "");
+                    config.rs_options = config_prefs.getString("rs_options_" + String.valueOf(i), "");
+                    config.rs_module = config_prefs.getString("rs_module_" + String.valueOf(i), "");
+                    config.local_path = config_prefs.getString("local_path_" + String.valueOf(i), "");
+                    configs.add(config);
+                }
+                else if(config.mode==1){
+                    config.rs_user = config_prefs.getString("rs_user_" + String.valueOf(i), "");
+                    config.rs_ip = config_prefs.getString("rs_ip_" + String.valueOf(i), "");
+                    config.rs_dest = config_prefs.getString("rs_dest_" + String.valueOf(i), "");
+                    config.rs_options = config_prefs.getString("rs_options_" + String.valueOf(i), "");
+                    config.local_path = config_prefs.getString("local_path_" + String.valueOf(i), "");
+                    configs.add(config);
+                }
             }
         }
         for(int i=1; i<100;i++) {
@@ -528,7 +541,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (v.getTag(R.id.bt_edit)!=null) {
             int pos = (int) v.getTag(R.id.bt_edit);
-            Intent intent = new Intent(this,editDaemonConfig.class);
+            Intent intent;
+            if (configs.get(pos).mode==0) {
+                intent = new Intent(this, editDaemonConfig.class);
+            }
+            else if (configs.get(pos).mode==1){
+                intent = new Intent(this, editRemoteShellConfig.class);
+            }
+            else{
+                intent = new Intent(this, editDaemonConfig.class);
+            }
             intent.putExtra("pos",pos);
             startActivity(intent);
         }

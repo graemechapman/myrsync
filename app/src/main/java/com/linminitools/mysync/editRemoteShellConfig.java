@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Map;
@@ -23,111 +21,103 @@ import static com.linminitools.mysync.MainActivity.appContext;
 import static com.linminitools.mysync.MainActivity.configs;
 import static com.linminitools.mysync.MainActivity.getPath;
 
-public class editDaemonConfig extends addDaemonConfig {
-    public addDaemonConfig d;
+public class editRemoteShellConfig extends addRemoteShellConfig {
+
+    public addRemoteShellConfig r;
+
+@Override
+    protected void onCreate(Bundle savedInstanceState){
+    super.onCreate(savedInstanceState);
 
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ViewGroup vg = findViewById(android.R.id.content);
-        Context ctx = this.getBaseContext();
-        d = new addDaemonConfig(ctx,vg);
-        setContentView(d.vi);
+    ViewGroup vg = findViewById(android.R.id.content);
+    Context ctx = this.getBaseContext();
+    r = new addRemoteShellConfig(ctx,vg);
+    setContentView(r.vi);
 
-        Button save = d.save_config;
-        Button view = d.view_cmd;
-        Button bt_add = d.add_path;
-        Button bt_exec = d.vi.findViewById(R.id.bt_execute);
-        ImageButton rsync_help = d.rsync_help_button;
-        rsync_help.setImageResource(android.R.drawable.ic_menu_help);
+    Intent i = getIntent();
+    final int p = i.getIntExtra("pos", 0);
+    RS_Configuration config = configs.get(p);
 
-        save.setEnabled(true);
-        view.setEnabled(true);
-        bt_add.setText("Change Path");
-        bt_exec.setVisibility(View.VISIBLE);
+    r.user.setText(config.rs_user);
+    r.remote_host_ip.setText(config.rs_ip);
+    r.destination.setText(config.rs_dest);
+    r.tv_path.setVisibility(View.VISIBLE);
+    r.tv_path.setText("Selected Path: "+ config.local_path);
+    Button execute = r.vi.findViewById(R.id.bt_execute);
 
-        Intent i = getIntent();
-        final int p = i.getIntExtra("pos", 0);
-        RS_Configuration config = configs.get(p);
+    ImageButton rsync_help = r.rsync_help;
+    ImageButton ssh_help = r.ssh_keys_help;
+    rsync_help.setImageResource(android.R.drawable.ic_menu_help);
+    ssh_help.setImageResource(android.R.drawable.ic_menu_help);
 
-        EditText ed_srv_ip = d.et_srv_ip;
-        ed_srv_ip.setText(config.rs_ip);
+    r.options=(config.rs_options) ;
 
-        EditText ed_rsync_user = d.et_rs_user;
-        ed_rsync_user.setText(config.rs_user);
-
-        EditText ed_srv_port = d.et_srv_port;
-        ed_srv_port.setText(config.rs_port);
-
-        EditText ed_rsync_mod = d.et_rs_mod;
-        ed_rsync_mod.setText(config.rs_module);
-
-        TextView tv_path = d.tv_path;
-        tv_path.setVisibility(View.VISIBLE);
-        tv_path.setText(config.local_path);
-
-        String rs_options = config.rs_options;
-
-        if (rs_options == "-") {
-            rs_options = "";
-        }
-
-        if (!rs_options.isEmpty()) {
-            String options = rs_options.substring(1);
-            for (char x : options.toCharArray()) {
-                int resID = getResources().getIdentifier("cb_" + String.valueOf(x), "id", getPackageName());
-                CheckBox cb = findViewById(resID);
-                cb.setChecked(true);
-            }
-        }
-
-        final int id = config.id;
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionConfig(v,id,p,1,d);
-            }
-        });
-
-        bt_exec.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                actionConfig(v, id, p,2,d);
-            }
-        });
-
-        bt_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionConfig(v,id,p,3,d);
-            }
-        });
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionConfig(v,id,p,4,d);
-            }
-        });
-
-
+    if (r.options == "-") {
+        r.options = "";
     }
 
-    protected void actionConfig(View v, int id, int position, int request,addDaemonConfig d){
-        Map<String,String> configMap=d.processForm(v);
+    if (!r.options.isEmpty()) {
+        String rs_options = r.options.substring(1);
+        for (char x : rs_options.toCharArray()) {
+            int resID = getResources().getIdentifier("cb_" + String.valueOf(x), "id", getPackageName());
+            CheckBox cb = findViewById(resID);
+            cb.setChecked(true);
+        }
+    }
 
-        if (!configMap.get("rs_ip").isEmpty() &&
-                !configMap.get("rs_module").isEmpty() && !configMap.get("local_path").isEmpty()) {
+    r.save_rsh.setEnabled(true);
+    r.view_cmd_bt.setEnabled(true);
+    execute.setVisibility(View.VISIBLE);
+
+    final int id=config.id;
+
+    r.save_rsh.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            action2Config(v,id,p,1,r);
+        }
+    });
+
+    execute.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+            action2Config(v, id, p,2,r);
+        }
+    });
+
+    r.add_path.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            action2Config(v,id,p,3,r);
+        }
+    });
+
+    r.view_cmd_bt.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            action2Config(v,id,p,4,r);
+        }
+    });
+
+
+}
+
+
+    protected void action2Config(View v, int id, int position, int request,addRemoteShellConfig r){
+        Map<String,String> configMap=r.processForm(v);
+
+        if (!configMap.get("rs_ip").isEmpty() && !configMap.get("rs_user").isEmpty() &&
+                !configMap.get("rs_dest").isEmpty() && !configMap.get("local_path").isEmpty()) {
 
             for (RS_Configuration c : configs){
 
                 if (c.id==id){
                     c.rs_ip = configMap.get("rs_ip");
                     c.rs_user = configMap.get("rs_user");
-                    c.rs_port = configMap.get("rs_port");
                     c.rs_options = configMap.get("rs_options");
-                    c.rs_module = configMap.get("rs_module");
                     c.local_path = configMap.get("local_path");
+                    c.rs_dest = configMap.get("rs_dest");
+                    c.mode = Integer.parseInt(configMap.get("rs_mode"));
 
 
                     if (request==1) {
@@ -157,7 +147,7 @@ public class editDaemonConfig extends addDaemonConfig {
                     }
 
                     else if (request==4){
-                        d.viewCommand(v);
+                        r.viewCommand(v);
                     }
 
                     break;
@@ -200,13 +190,14 @@ public class editDaemonConfig extends addDaemonConfig {
                 Log.d("ONACTIVITYRESULT",local_path);
 
 
-                d.Update_view(local_path);
+                r.Update_view(local_path);
 
 
             }
 
         }
     }
+
 
 
 }

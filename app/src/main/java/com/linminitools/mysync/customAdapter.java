@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +26,8 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         private int fromTab;
         private ArrayList<Scheduler> Scheduler_List = new ArrayList<>();
         private ArrayList<String> Headers = new ArrayList<>();
+        private addDaemonConfig d;
+        private addRemoteShellConfig r;
 
 
         public customAdapter(Context context, ArrayList<?> data, int request_code) {
@@ -34,8 +35,10 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         data_toString=new String[data.size()];
         this.fromTab=request_code;
         
-        if (request_code==21) Headers = (ArrayList<String>) data;
+        if (request_code==21) {
+            Headers = (ArrayList<String>) data;
 
+        }
         if (!data.isEmpty()) {
             for (Object c : data) {
 
@@ -172,7 +175,7 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
     @Override
     public int getGroupCount() {
         Log.d("ADAPTER", "GetGroupCount");
-            return 2;
+            return 3;
     }
 
     @Override
@@ -189,19 +192,22 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        Log.d("ADAPTER", "GET CHILD" + data_toString[groupPosition]);
-            return 0 ;
+
+        if (groupPosition == 0) return d;
+
+        else if (groupPosition==1) return r;
+
+        else return null;
     }
 
     @Override
     public long getGroupId(int groupPosition) {
         Log.d("ADAPTER", "GetGroupId");
-            return 0;
+            return (long)groupPosition;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        Log.d("ADAPTER", "GetChildId");
             return 0;
     }
 
@@ -217,19 +223,17 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Log.d("ADAPTER", "GetChildView");
+        Log.d("ADAPTER", String.valueOf(groupPosition));
         View vi = convertView;
         if (groupPosition==0) {
-
-            addDaemonConfig d = new addDaemonConfig(context,parent);
+            if (d==null) d = new addDaemonConfig(context,parent);
             vi=d.vi;
-            Button save = d.save_config;
-            Button view_cmd = d.view_cmd;
-            Button add_path = d.add_path;
-
-
         }
-        if (groupPosition==1) vi=inflater.inflate(R.layout.add_remote_shell_config, parent,false);
+        else if (groupPosition==1) {
+            Log.d("GETCHILDVIEW",String.valueOf(groupPosition));
+            if (r==null) r = new addRemoteShellConfig(context,parent);
+            vi=r.vi;
+        }
         return vi;
     }
 
@@ -240,7 +244,7 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
     @Override
     public void onGroupExpanded(int groupPosition) {
-
+        
     }
 
     @Override
@@ -259,4 +263,5 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         Log.d("ADAPTER", "getCombinedGroupId");
         return 0;
     }
+
 }
