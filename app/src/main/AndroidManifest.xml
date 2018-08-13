@@ -57,8 +57,26 @@
 
         <activity
             android:name=".addRemoteShellConfig"
-            android:label="add_remote_shell_config"
+            android:label="Add Remote Shell Configuration"
             android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.linminitools.mysync.MainActivity" />
+
+        <activity
+            android:name=".addAdvancedConfig"
+            android:label="Add Advanced Configuration"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.linminitools.mysync.MainActivity" />
+
+        <activity
+            android:name=".editAdvancedConfig"
+            android:label="Edit Advanced Configuration"
+            android:parentActivityName=".tab2"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

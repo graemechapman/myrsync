@@ -26,6 +26,7 @@ public class configurationTypeSelector extends AppCompatActivity {
     customAdapter adapter;
     addDaemonConfig d;
     addRemoteShellConfig r;
+    addAdvancedConfig a;
     ExpandableListView lv_config_types;
     int latest_group_clicked;
     @Override
@@ -122,6 +123,10 @@ public class configurationTypeSelector extends AppCompatActivity {
             if (r== null) r = (addRemoteShellConfig) adapter.getChild(1,0);
             r.viewCommand(v);
         }
+        else if (latest_group_clicked==2){
+            if (a==null) a= (addAdvancedConfig) adapter.getChild(2,0);
+            a.viewCommand(v);
+        }
     }
 
     public void saveConfig(View v) {
@@ -132,6 +137,10 @@ public class configurationTypeSelector extends AppCompatActivity {
         else if (latest_group_clicked==1){
             if (r == null) r = (addRemoteShellConfig) adapter.getChild(1,0);
             if (r.saveConfig(v)) this.finish();
+        }
+        else if (latest_group_clicked==2){
+            if (a == null) a = (addAdvancedConfig) adapter.getChild(2,0);
+            if (a.saveConfig(v)) this.finish();
         }
 
     }
@@ -150,8 +159,16 @@ public class configurationTypeSelector extends AppCompatActivity {
     }
 
     public void generate_keys(View v){
-        if (r==null) r =(addRemoteShellConfig)adapter.getChild(1,0);
-        String k =r.generate_keys(v);
+        String k="";
+        if (latest_group_clicked==1) {
+            if (r == null) r = (addRemoteShellConfig) adapter.getChild(1, 0);
+            k = r.generate_keys(v);
+        }
+        else if (latest_group_clicked==2){
+            if (a == null) a = (addAdvancedConfig) adapter.getChild(2, 0);
+            k = a.generate_keys(v);
+        }
+
         File rsa_pub = new File(appContext.getApplicationInfo().dataDir + "/rsa_key.pub");
         try {
             FileWriter fw = new FileWriter(rsa_pub);

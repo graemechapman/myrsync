@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         settings.put("Sound",settings_prefs.getBoolean("Sound",true));
 
         for(int i=1; i<100;i++){
-            if (config_prefs.getString("rs_ip_"+String.valueOf(i),"").isEmpty()){
+            if (!config_prefs.getBoolean("saved_"+String.valueOf(i),false)){
                 break;
             }
             else {
@@ -132,6 +132,13 @@ public class MainActivity extends AppCompatActivity {
                     config.rs_dest = config_prefs.getString("rs_dest_" + String.valueOf(i), "");
                     config.rs_options = config_prefs.getString("rs_options_" + String.valueOf(i), "");
                     config.local_path = config_prefs.getString("local_path_" + String.valueOf(i), "");
+                    configs.add(config);
+                }
+                else if(config.mode==2){
+                    Log.d("config_mode","2");
+                    config.rs_options = config_prefs.getString("rs_options_" + String.valueOf(i), "");
+                    config.arg1 = config_prefs.getString("arg1_" + String.valueOf(i), "");
+                    config.arg2 = config_prefs.getString("arg2_" + String.valueOf(i), "");
                     configs.add(config);
                 }
             }
@@ -549,7 +556,7 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, editRemoteShellConfig.class);
             }
             else{
-                intent = new Intent(this, editDaemonConfig.class);
+                intent = new Intent(this, editAdvancedConfig.class);
             }
             intent.putExtra("pos",pos);
             startActivity(intent);

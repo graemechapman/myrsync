@@ -311,21 +311,23 @@
                     android:layout_marginTop="8dp"
                     android:hint="@string/v"
                     android:textSize="18sp"
-                    app:layout_constraintEnd_toStartOf="@+id/bt_help_rsync"
+                    app:layout_constraintEnd_toStartOf="@+id/ib_info"
                     app:layout_constraintStart_toEndOf="@+id/cb_z"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                    android:id="@+id/bt_help_rsync"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/ib_info"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:contentDescription="rsync Help Button"
                     android:onClick="rsync_help"
+                    android:scaleType="centerInside"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_help" />
+                    app:srcCompat="@drawable/help" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -400,8 +402,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
+                    android:enabled="false"
                     android:text="Run Now!"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_rs_cmd_View" />
 

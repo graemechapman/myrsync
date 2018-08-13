@@ -53,7 +53,7 @@ public class addDaemonConfig extends AppCompatActivity {
         tv_path = vi.findViewById(R.id.tv_path);
         add_path = vi.findViewById(R.id.bt_add);
         save_config = vi.findViewById(R.id.bt_save);
-        rsync_help_button= vi.findViewById(R.id.bt_help_rsync);
+        rsync_help_button= vi.findViewById(R.id.ib_info);
         view_cmd = vi.findViewById(R.id.bt_view);
         save_config.setEnabled(false);
         view_cmd.setEnabled(false);
@@ -61,7 +61,7 @@ public class addDaemonConfig extends AppCompatActivity {
         et_srv_port= vi.findViewById(R.id.ed_srv_port);
         et_rs_user= vi.findViewById(R.id.ed_rsync_user);
         et_rs_mod= vi.findViewById(R.id.ed_rsync_mod);
-        ImageButton rsync_help_button =vi.findViewById(R.id.bt_help_rsync);
+        ImageButton rsync_help_button =vi.findViewById(R.id.ib_info);
 
     }
 

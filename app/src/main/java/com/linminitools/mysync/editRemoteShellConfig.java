@@ -36,7 +36,7 @@ public class editRemoteShellConfig extends addRemoteShellConfig {
     setContentView(r.vi);
 
     Intent i = getIntent();
-    final int p = i.getIntExtra("pos", 0);
+    final int p = i.getIntExtra("pos", -1);
     RS_Configuration config = configs.get(p);
 
     r.user.setText(config.rs_user);

@@ -38,16 +38,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/et_remote_dir" />
 
                 <ImageButton
-                    android:id="@+id/bt_keys_help"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/ib_keys_help"
+                    android:layout_width="42dp"
+                    android:layout_height="46dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:contentDescription="rsync Help Button"
                     android:onClick="rsync_help"
                     app:layout_constraintStart_toEndOf="@+id/bt_generate_ssh_keys"
                     app:layout_constraintTop_toBottomOf="@+id/bt_add_local_path"
-                    app:srcCompat="@android:drawable/ic_menu_help" />
+                    app:srcCompat="@drawable/ic_info_black_24dp" />
 
                 <Button
                     android:id="@+id/bt_add_local_path"
@@ -75,12 +76,12 @@
                     android:inputType="text"
                     android:textAlignment="center"
                     android:textSize="14sp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/et_rsh_host"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/et_remote_host"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/et_rsh_host" />
+                    app:layout_constraintStart_toEndOf="@+id/et_remote_host" />
 
                 <TextView
-                    android:id="@+id/tv_rsh_settings"
+                    android:id="@+id/tv_adv_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_marginEnd="8dp"
@@ -93,7 +94,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/et_rsh_host"
+                    android:id="@+id/et_remote_host"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -103,7 +104,7 @@
                     android:textAlignment="center"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_rsh_settings" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_adv_settings" />
 
                 <EditText
                     android:id="@+id/et_remote_dir"
@@ -116,7 +117,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/et_rsh_host" />
+                    app:layout_constraintTop_toBottomOf="@+id/et_remote_host" />
 
                 <Button
                     android:id="@+id/bt_generate_ssh_keys"
@@ -292,21 +293,23 @@
                     android:layout_marginTop="8dp"
                     android:hint="@string/v"
                     android:textSize="18sp"
-                    app:layout_constraintEnd_toStartOf="@+id/bt_help_rsync"
+                    app:layout_constraintEnd_toStartOf="@+id/ib_info"
                     app:layout_constraintStart_toEndOf="@+id/cb_z"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
-                    android:id="@+id/bt_help_rsync"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/ib_info"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:contentDescription="rsync Help Button"
                     android:onClick="rsync_help"
+                    android:scaleType="centerInside"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_help" />
+                    app:srcCompat="@drawable/help" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -330,7 +333,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:onClick=""
+                    android:onClick="viewCommand"
                     android:text="@string/view_command"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -381,8 +384,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
+                    android:enabled="false"
                     android:text="Run Now!"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_rs_cmd_View" />
 

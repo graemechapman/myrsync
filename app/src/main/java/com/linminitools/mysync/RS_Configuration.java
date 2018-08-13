@@ -18,17 +18,18 @@ import static com.linminitools.mysync.MainActivity.appContext;
 
 public class RS_Configuration {
 
-    protected String rs_ip, rs_user, rs_module, rs_options, local_path,name,rs_dest;
+    protected String rs_ip, rs_user, rs_module, rs_options, local_path,name,rs_dest,arg1,arg2;
     protected String rs_port="873";
     protected int id, mode;
+    protected boolean saved;
 
     RS_Configuration(int id){
         this.id=id;
         this.name="config_"+String.valueOf(id);
+        this.saved=false;
     }
     
     protected void saveToDisk(){
-        
 
             SharedPreferences prefs = appContext.getSharedPreferences("configs", MODE_PRIVATE);
             SharedPreferences.Editor prefseditor = prefs.edit();
@@ -43,8 +44,6 @@ public class RS_Configuration {
             prefseditor.putString("last_result_" + String.valueOf(this.id), "Never Run");
             prefseditor.putString("last_run_" + String.valueOf(this.id), "Never Run");
             prefseditor.putInt("mode_" + String.valueOf(this.id), mode);
-
-            prefseditor.apply();
         }
         else if(mode==1){
             prefseditor.putString("rs_options_" + String.valueOf(this.id), rs_options);
@@ -55,10 +54,17 @@ public class RS_Configuration {
             prefseditor.putString("last_result_" + String.valueOf(this.id), "Never Run");
             prefseditor.putString("last_run_" + String.valueOf(this.id), "Never Run");
             prefseditor.putInt("mode_" + String.valueOf(this.id), mode);
-
-            prefseditor.apply();
         }
-
+        else if(mode==2){
+            prefseditor.putString("rs_options_" + String.valueOf(this.id), rs_options);
+            prefseditor.putString("arg1_" + String.valueOf(this.id), arg1);
+            prefseditor.putString("arg2_" + String.valueOf(this.id), arg2);
+            prefseditor.putInt("mode_" + String.valueOf(this.id), mode);
+            prefseditor.putString("last_result_" + String.valueOf(this.id), "Never Run");
+            prefseditor.putString("last_run_" + String.valueOf(this.id), "Never Run");
+        }
+        prefseditor.putBoolean("saved_"+ String.valueOf(this.id),true);
+        prefseditor.apply();
     }
     
     protected void deleteFromDisk(){
@@ -66,7 +72,6 @@ public class RS_Configuration {
             SharedPreferences prefs = appContext.getSharedPreferences("configs", MODE_PRIVATE);
             SharedPreferences.Editor prefseditor = prefs.edit();
         if (mode==0) {
-
             prefseditor.remove("rs_options_" + String.valueOf(this.id));
             prefseditor.remove("rs_user_" + String.valueOf(this.id));
             prefseditor.remove("rs_module_" + String.valueOf(this.id));
@@ -75,10 +80,8 @@ public class RS_Configuration {
             prefseditor.remove("local_path_" + String.valueOf(this.id));
             prefseditor.remove("last_result_" + String.valueOf(this.id));
             prefseditor.remove("last_run_" + String.valueOf(this.id));
-            prefseditor.apply();
         }
         else if (mode==1){
-
             prefseditor.remove("rs_options_" + String.valueOf(this.id));
             prefseditor.remove("rs_user_" + String.valueOf(this.id));
             prefseditor.remove("mode_" + String.valueOf(this.id));
@@ -87,9 +90,17 @@ public class RS_Configuration {
             prefseditor.remove("local_path_" + String.valueOf(this.id));
             prefseditor.remove("last_result_" + String.valueOf(this.id));
             prefseditor.remove("last_run_" + String.valueOf(this.id));
-            prefseditor.apply();
-
         }
+        else if (mode==2){
+            prefseditor.remove("arg1_"+String.valueOf(this.id));
+            prefseditor.remove("arg2_"+String.valueOf(this.id));
+            prefseditor.remove("rs_options_"+String.valueOf(this.id));
+            prefseditor.remove("mode_" + String.valueOf(this.id));
+            prefseditor.remove("last_result_" + String.valueOf(this.id));
+            prefseditor.remove("last_run_" + String.valueOf(this.id));
+        }
+        prefseditor.remove("saved_"+ String.valueOf(this.id));
+        prefseditor.apply();
     }
 
     protected void executeConfig(final Context context){
@@ -102,19 +113,16 @@ public class RS_Configuration {
         final String local_path=this.local_path;
         String command="";
 
-        if(!this.rs_user.isEmpty()) this.rs_user=this.rs_user+"@";
-        if (this.mode==0) {
-             command = "rsync://" + this.rs_user + this.rs_ip + ":" + this.rs_port + "/" + this.rs_module;
-        }
-        else if(this.mode==1){
-             command = this.rs_user + ":" + this.rs_ip + "/" + this.rs_dest;
-        }
+        if (this.mode!=2) if(!this.rs_user.isEmpty()) this.rs_user=this.rs_user+"@";
+
+        if (this.mode==0) command = "rsync://" + this.rs_user + this.rs_ip + ":" + this.rs_port + "/" + this.rs_module;
+        else if(this.mode==1) command = this.rs_user + ":" + this.rs_ip + "/" + this.rs_dest;
+
 
         final String cmd=command;
 
         Log.d("RSYNC Log Path",log);
         Log.d("RSYNC CMD", cmd);
-        Log.d("RSYNC Local Path",local_path);
 
 
             Thread t = new Thread(){
@@ -127,13 +135,12 @@ public class RS_Configuration {
                         pref_Edit.putBoolean("is_running",true);
                         pref_Edit.commit();
                         String rsync_bin= context.getSharedPreferences("Install",MODE_PRIVATE).getString("rsync_binary",".");
+
                         ProcessBuilder p;
-                        if (mode==0) {
-                             p = new ProcessBuilder(rsync_bin, options, "--log-file", log, local_path, cmd);
-                        }
-                        else if (mode==1){
-                             p = new ProcessBuilder(rsync_bin, options+"e","ssh", "--log-file", log, local_path, cmd);
-                        }
+
+                        if (mode==0) p = new ProcessBuilder(rsync_bin, options, "--log-file", log, local_path, cmd);
+                        else if (mode==1) p = new ProcessBuilder(rsync_bin, options+"e","ssh", "--log-file", log, local_path, cmd);
+                        else if (mode==2) p=new ProcessBuilder(rsync_bin,rs_options,arg1,arg2);
                         else p = new ProcessBuilder("echo","Wrong Command");
 
                         Map<String, String> env = p.environment();

@@ -28,6 +28,7 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         private ArrayList<String> Headers = new ArrayList<>();
         private addDaemonConfig d;
         private addRemoteShellConfig r;
+        private addAdvancedConfig a;
 
 
         public customAdapter(Context context, ArrayList<?> data, int request_code) {
@@ -37,8 +38,8 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
         
         if (request_code==21) {
             Headers = (ArrayList<String>) data;
-
         }
+
         if (!data.isEmpty()) {
             for (Object c : data) {
 
@@ -96,8 +97,8 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
                     try{
                         conf= configs.get(sched.config_pos);
                     }catch (IndexOutOfBoundsException e){
-                        conf= configs.get(0);
-                        sched.config_pos=conf.id;
+                        conf = configs.get(0);
+                        sched.config_pos = conf.id;
                     }
                     tv_conf_name.setText(conf.name);
                     tv_sched_name.setText(sched.name);
@@ -197,6 +198,8 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
 
         else if (groupPosition==1) return r;
 
+        else if (groupPosition==2) return a;
+
         else return null;
     }
 
@@ -233,6 +236,10 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
             Log.d("GETCHILDVIEW",String.valueOf(groupPosition));
             if (r==null) r = new addRemoteShellConfig(context,parent);
             vi=r.vi;
+        }
+        else {
+            if (a==null) a= new addAdvancedConfig(context,parent);
+            vi=a.vi;
         }
         return vi;
     }
