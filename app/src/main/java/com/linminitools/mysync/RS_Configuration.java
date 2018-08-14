@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -186,7 +185,7 @@ public class RS_Configuration {
                     }
 
 
-                    catch (IOException e) {
+                    catch (Exception e) {
                         e.printStackTrace();
                         Log.d("EXCEPTION", e.getMessage());
                     }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.linminitools.mysync.MainActivity.configs;
 import static com.linminitools.mysync.MainActivity.schedulers;
 
 public class tab1 extends Fragment {
@@ -32,10 +33,11 @@ public class tab1 extends Fragment {
         // Setup any handles to view objects here
         //        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
         status = view.findViewById(R.id.status_list);
-        status.setEmptyView(view.findViewById(android.R.id.empty));
-        customAdapter adapter = new customAdapter(this.getContext(),schedulers,1);
-
-        status.setAdapter(adapter);
+        //status.setEmptyView(view.findViewById(android.R.id.empty));
+        if (!configs.isEmpty()) {
+            customAdapter adapter = new customAdapter(this.getContext(), schedulers, 1);
+            //status.setAdapter(adapter);
+        }
 
     }
 
@@ -71,8 +73,10 @@ public class tab1 extends Fragment {
                         h.post(new Runnable() {
                             @Override
                             public void run() {
-                                customAdapter adapter = new customAdapter(ctx,schedulers,1);
-                                status.setAdapter(adapter);
+                                if (!configs.isEmpty()) {
+                                    customAdapter adapter = new customAdapter(ctx, schedulers, 1);
+                                    status.setAdapter(adapter);
+                                }
                             }
                         });
                         sleep(2000);

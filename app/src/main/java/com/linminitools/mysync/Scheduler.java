@@ -6,9 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import android.support.v4.app.AlarmManagerCompat;
-import android.support.v7.util.SortedList;
 import android.util.Log;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -23,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.content.Context.ALARM_SERVICE;
-import static android.content.Context.MODE_PRIVATE;
-import static com.linminitools.mysync.MainActivity.appContext;
 import static java.util.Calendar.DAY_OF_WEEK;
 import static java.util.Calendar.getInstance;
 
@@ -86,6 +80,7 @@ public class Scheduler extends MainActivity{
         prefseditor.remove("min_"+String.valueOf(this.id));
         prefseditor.remove("days_"+String.valueOf(this.id));
         prefseditor.remove("name_"+String.valueOf(this.id));
+        prefseditor.remove("config_pos_"+String.valueOf(this.id));
         prefseditor.commit();
     }
 

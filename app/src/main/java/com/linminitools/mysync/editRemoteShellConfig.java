@@ -68,7 +68,7 @@ public class editRemoteShellConfig extends addRemoteShellConfig {
 
     r.save_rsh.setEnabled(true);
     r.view_cmd_bt.setEnabled(true);
-    execute.setVisibility(View.VISIBLE);
+    execute.setEnabled(true);
 
     final int id=config.id;
 

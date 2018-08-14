@@ -43,6 +43,8 @@ public class editDaemonConfig extends addDaemonConfig {
 
         save.setEnabled(true);
         view.setEnabled(true);
+        bt_exec.setEnabled(true);
+
         bt_add.setText("Change Path");
         bt_exec.setVisibility(View.VISIBLE);
 

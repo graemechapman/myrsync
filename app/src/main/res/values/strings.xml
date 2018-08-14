@@ -30,6 +30,34 @@
         -r, recurse into directories \n\t -u, skip files that are newer on the receiver \n\t -p, preserve permissions \n\t -o, preserve owner (super-user only) \n\t -g, preserve group \n\t -t,
         preserve modification times \n\t -n, perform a trial run with no changes made (dry run) \n\t -m, prune empty directory chains from file-list \n\t -O, omit directories from --times
         </string>
+    <string name="adv_config_help">This section is addressed to experienced users of the utility, where any rsync configuration using any option described in rsync man page, can be used.\n\n
+        In this form, there are three fields that must be completed: Options (without the leading \"-\"), Arg1 and Arg2.\n\n
+        Any rsync configuration takes three arguments to complete. For your reference check the following part from rsync documentation:\n\n\n
+        Local:  rsync [OPTION...] SRC... [DEST]\n\n\n
+
+        Access via remote shell:\n\n
+          Pull: \n rsync [OPTION...] [USER@]HOST:SRC... [DEST]\n\n
+          Push: \n rsync [OPTION...] SRC... [USER@]HOST:DEST\n\n\n
+
+        Access via rsync daemon:\n
+          Pull: \n
+                rsync [OPTION...] [USER@]HOST::SRC... [DEST]\n\n
+                rsync [OPTION...] rsync://[USER@]HOST[:PORT]/SRC... [DEST]\n\n
+          Push: \n
+                rsync [OPTION...] SRC... [USER@]HOST::DEST\n\n
+                rsync [OPTION...] SRC... rsync://[USER@]HOST[:PORT]/DEST\n\n\n
+
+        So, Arg1 can be the expression for the SRC or DEST in case of pulling, and the Arg2 will be the Expression for DEST or SRC respectively. \n\n
+        Example: \n Options: avzhe ssh --progress \n Arg1: /storage/emulated/0/DCIM \n Arg2: root@192.168.0.100:/backups \n\n
+        For more info regarding the rsync documentation visit: https://download.samba.org/pub/rsync/rsync.html \n\n
+    </string>
+
+    <string name="ssh_help"> Before using rsync in remote shell configuration, passwordless ssh logins to the remote server must be setup. \n\n
+        The user can do it manually or use a third-party app or use the "Generate SSH Keypair" button on this form. \n\n
+        You need to import the generated public key /rsa_key.pub to your server.
+
+    </string>
+
     <string name="save_and_view_command">Save and View Command</string>
     <string name="save_configuration">Save Configuration</string>
     <string name="generated_rsync_command">Generated Rsync Command:</string>

@@ -1,8 +1,5 @@
 package com.linminitools.mysync;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -33,38 +31,40 @@ public class addScheduler extends AppCompatActivity {
 
         Spinner sp_configs= findViewById(R.id.sp_configs);
         List<String> listLoadToSpinner = new ArrayList<String>();
+        if (!configs.isEmpty()) {
+            for (RS_Configuration c : configs) {
+                listLoadToSpinner.add(c.name);
+            }
 
-        for (RS_Configuration c : configs){
-            listLoadToSpinner.add(c.name);
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+                    appContext,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    listLoadToSpinner);
+
+            sp_configs.setAdapter(spinnerAdapter);
         }
-
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-                appContext,
-                android.R.layout.simple_spinner_dropdown_item,
-                listLoadToSpinner);
-
-        sp_configs.setAdapter(spinnerAdapter);
 
     }
 
     public void saveScheduler(View v){
+        Spinner sp = findViewById(R.id.sp_configs);
+        if (sp.getChildCount()==0){
+            Toast t = Toast.makeText(appContext, "Scheduler must attach to a configuration. Crreate at least one configuration first!", Toast.LENGTH_SHORT);
+            t.show();
+            this.finish();
+        }
 
         TextView tv = findViewById(R.id.ed_name);
         TimePicker tp = findViewById(R.id.timePicker);
         tp.setIs24HourView(true);
         List<String> day_string = Arrays.asList("sunday","monday","tuesday","wednesday","thursday","friday","saturday");
 
-        //java.util.Calendar cal = java.util.Calendar.getInstance();
-
-        //cal.set(java.util.Calendar.HOUR,tp.getCurrentHour());
-        //cal.set(java.util.Calendar.MINUTE,tp.getCurrentMinute());
-        //long scheduler_time = cal.getTimeInMillis();
-
         String name = String.valueOf(tv.getText());
-        Spinner sp = findViewById(R.id.sp_configs);
+
+
+
+
         int config_pos= sp.getSelectedItemPosition();
-
-
         //Intent futureIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
         //futureIntent.addCategory("com.linminitools.mysync");
         //futureIntent.putExtra("Time",scheduler_time);

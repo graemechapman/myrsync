@@ -97,8 +97,13 @@ class customAdapter extends BaseAdapter implements ExpandableListAdapter{
                     try{
                         conf= configs.get(sched.config_pos);
                     }catch (IndexOutOfBoundsException e){
-                        conf = configs.get(0);
-                        sched.config_pos = conf.id;
+                        try {
+                            conf = configs.get(0);
+                            sched.config_pos = conf.id;
+                        }
+                        catch (IndexOutOfBoundsException ex){
+                            return vi.findViewById(android.R.id.empty);
+                        }
                     }
                     tv_conf_name.setText(conf.name);
                     tv_sched_name.setText(sched.name);

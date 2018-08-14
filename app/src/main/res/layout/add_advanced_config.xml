@@ -23,7 +23,7 @@
                 android:layout_height="match_parent">
 
                 <ImageButton
-                    android:id="@+id/ib_arg1_path_selector"
+                    android:id="@+id/ib_arg2_path_selector"
                     android:layout_width="49dp"
                     android:layout_height="49dp"
                     android:layout_marginEnd="16dp"
@@ -35,8 +35,8 @@
 
                 <ImageButton
                     android:id="@+id/ib_info"
-                    android:layout_width="55dp"
-                    android:layout_height="46dp"
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
@@ -87,14 +87,14 @@
 
                 <ImageButton
                     android:id="@+id/ib_keys_help"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="rsync Help Button"
                     android:onClick="rsync_help"
-                    app:layout_constraintStart_toEndOf="@+id/bt_generate_ssh_keys"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_arg2_field"
                     app:srcCompat="@drawable/help" />
 
@@ -115,12 +115,11 @@
                     android:id="@+id/bt_generate_ssh_keys"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
                     android:onClick="generate_keys"
                     android:text="Generate SSH Keypair"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/et_arg2_field" />
+                    app:layout_constraintBaseline_toBaselineOf="@+id/cb_logfile"
+                    app:layout_constraintEnd_toStartOf="@+id/ib_keys_help" />
 
                 <ImageButton
                     android:id="@+id/ib_arg1_path_selector"
@@ -132,6 +131,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ib_info"
                     app:srcCompat="@drawable/add_folder" />
+
+                <CheckBox
+                    android:id="@+id/cb_logfile"
+                    style="@android:style/Widget.Material.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:buttonTint="@android:color/background_dark"
+                    android:checked="true"
+                    android:text="Log File"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_arg2_field" />
 
             </android.support.constraint.ConstraintLayout>
 
