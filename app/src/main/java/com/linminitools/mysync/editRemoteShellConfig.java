@@ -1,12 +1,17 @@
 package com.linminitools.mysync;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
+import android.security.KeyPairGeneratorSpec;
+import android.security.keystore.KeyProperties;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +20,25 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Calendar;
 import java.util.Map;
+
+import javax.security.auth.x500.X500Principal;
 
 import static com.linminitools.mysync.MainActivity.appContext;
 import static com.linminitools.mysync.MainActivity.configs;
 import static com.linminitools.mysync.MainActivity.getPath;
+import static java.nio.CharBuffer.wrap;
 
 public class editRemoteShellConfig extends addRemoteShellConfig {
 
@@ -48,8 +67,8 @@ public class editRemoteShellConfig extends addRemoteShellConfig {
 
     ImageButton rsync_help = r.rsync_help;
     ImageButton ssh_help = r.ssh_keys_help;
-    rsync_help.setImageResource(android.R.drawable.ic_menu_help);
-    ssh_help.setImageResource(android.R.drawable.ic_menu_help);
+    rsync_help.setImageResource(R.drawable.info);
+    ssh_help.setImageResource(R.drawable.help);
 
     r.options=(config.rs_options) ;
 
@@ -98,6 +117,33 @@ public class editRemoteShellConfig extends addRemoteShellConfig {
             action2Config(v,id,p,4,r);
         }
     });
+
+    r.generate_ssh.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String k;
+            k=generate_keys(v);
+            String public_key_path=appContext.getApplicationInfo().dataDir + "/rsa_key.pub";
+            File rsa_pub = new File(appContext.getApplicationInfo().dataDir + "/rsa_key.pub");
+            try {
+                FileWriter fw = new FileWriter(rsa_pub);
+                fw.write(k);
+                fw.close();
+                AlertDialog dialog = new AlertDialog.Builder(v.getContext())
+                        .setTitle("KeyPair Generation")
+                        .setMessage("The location of the public key is \n "+public_key_path+" \nThis file must be imported in your server")
+                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
+            }
+            catch( IOException e){
+                Log.d("IOEexcepton",e.toString());
+            }
+        }
+    });
+
+
 
 
 }
@@ -169,6 +215,55 @@ public class editRemoteShellConfig extends addRemoteShellConfig {
 
 
     }
+
+    public String generate_keys(View v) {
+        try {
+
+            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            keyStore.load(null);
+            String KEY_ALIAS = "SSH_CREDENTIALS";
+
+            // Generate the RSA key pairs
+            if (!keyStore.containsAlias(KEY_ALIAS)) {
+                // Generate a key pair for encryption
+                Log.d("SSH", "ALIAS EXISTS");
+                Calendar start = Calendar.getInstance();
+                Calendar end = Calendar.getInstance();
+                end.add(Calendar.YEAR, 30);
+
+                KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(context)
+                        .setAlias(KEY_ALIAS)
+                        .setSubject(new X500Principal("CN=" + KEY_ALIAS))
+                        .setSerialNumber(BigInteger.TEN)
+                        .setStartDate(start.getTime())
+                        .setKeyType(KeyProperties.KEY_ALGORITHM_RSA)
+                        .setEndDate(end.getTime())
+                        .build();
+                KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
+                kpg.initialize(spec);
+                KeyPair kp = kpg.generateKeyPair();
+                byte publickey[] = kp.getPublic().getEncoded();
+
+                KeyFactory fact = KeyFactory.getInstance("RSA");
+                X509EncodedKeySpec sp = fact.getKeySpec(kp.getPublic(), X509EncodedKeySpec.class);
+                String publicKeyString = Base64.encodeToString(sp.getEncoded(), Base64.DEFAULT);
+                String pub = Base64.encodeToString(publickey, Base64.DEFAULT);
+                String pem = "-----BEGIN PUBLIC KEY-----\n" + wrap(pub) + "-----END PUBLIC KEY-----\n";
+                return pem;
+            } else {
+                PublicKey publicKey = keyStore.getCertificate(KEY_ALIAS).getPublicKey();
+                byte publickey[] = keyStore.getCertificate(KEY_ALIAS).getPublicKey().getEncoded();
+
+                String pub = Base64.encodeToString(publickey, Base64.DEFAULT);
+                String pem = "-----BEGIN PUBLIC KEY-----\n" + wrap(pub) + "-----END PUBLIC KEY-----\n";
+                return pem;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){

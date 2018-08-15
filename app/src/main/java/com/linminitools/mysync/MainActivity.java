@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 else if(config.mode==2){
                     Log.d("config_mode","2");
                     config.rs_options = config_prefs.getString("rs_options_" + String.valueOf(i), "");
+                    config.rs_logfile = config_prefs.getString("rs_logfile_"+String.valueOf(i), "");
                     config.arg1 = config_prefs.getString("arg1_" + String.valueOf(i), "");
                     config.arg2 = config_prefs.getString("arg2_" + String.valueOf(i), "");
                     configs.add(config);

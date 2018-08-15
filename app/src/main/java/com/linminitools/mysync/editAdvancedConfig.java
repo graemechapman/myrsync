@@ -142,11 +142,19 @@ public class editAdvancedConfig extends AppCompatActivity {
             public void onClick(View v) {
                 String k;
                 k=generate_keys(v);
+                String public_key_path=appContext.getApplicationInfo().dataDir + "/rsa_key.pub";
                 File rsa_pub = new File(appContext.getApplicationInfo().dataDir + "/rsa_key.pub");
                 try {
                     FileWriter fw = new FileWriter(rsa_pub);
                     fw.write(k);
                     fw.close();
+                    AlertDialog dialog = new AlertDialog.Builder(v.getContext())
+                            .setTitle("KeyPair Generation")
+                            .setMessage("The location of the public key is \n "+public_key_path+" \nThis file must be imported in your server")
+                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).show();
                 }
                 catch( IOException e){
                     Log.d("IOEexcepton",e.toString());
@@ -210,45 +218,6 @@ public class editAdvancedConfig extends AppCompatActivity {
                 String pem = "-----BEGIN PUBLIC KEY-----\n" + wrap(pub) + "-----END PUBLIC KEY-----\n";
                 return pem;
             }
-
-
-
-
-
-
-
-
-            /*
-
-            AlertDialog.Builder alertDialogBuilder =
-                    new AlertDialog.Builder(v.getContext())
-                            .setTitle("Your KEYS")
-                            .setMessage("I want to show the keys here")
-                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                    ;
-            alertDialogBuilder.show();
-
-
-
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KeyStore.getDefaultType());
-            keyPairGenerator.initialize(2048);
-            KeyPair kp= keyPairGenerator.generateKeyPair();
-
-            PrivateKey priv= kp.getPrivate();
-            PublicKey pub= kp.getPublic();
-
-            KeyStore ks= KeyStore.getInstance(KeyStore.getDefaultType());
-            ks.load(null);
-
-            KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(priv.getEncoded());
-
-            KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("privateKey", pivKey);
-
-            ks.setEntry("PrivateKey",(KeyStore.PrivateKeyEntry)priv,null);
-                */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -285,12 +254,12 @@ public class editAdvancedConfig extends AppCompatActivity {
         String rs_options = configMap.get("rs_options");
         String arg1 = configMap.get("rs_arg1");
         String arg2 = configMap.get("rs_arg2");
+        String rs_logfile="";
 
         final SharedPreferences prefs =  context.getSharedPreferences("Rsync_Command_build", MODE_PRIVATE);
         String log_path= prefs.getString("log",context.getApplicationInfo().dataDir+"/logfile.log");
 
-        if (cb_useLogFile.isChecked()) rs_options=rs_options+"--log-file="+log_path;
-
+        if (cb_useLogFile.isChecked()) rs_logfile="--log-file="+log_path;
 
 
         if (!arg1.isEmpty() && !arg2.isEmpty() && !rs_options.isEmpty()) {
@@ -299,6 +268,7 @@ public class editAdvancedConfig extends AppCompatActivity {
             config.arg1 = arg1;
             config.arg2 = arg2;
             config.rs_options = rs_options;
+            config.rs_logfile=rs_logfile;
             config.saveToDisk();
             configs.add(config);
             return true;
@@ -322,10 +292,15 @@ public class editAdvancedConfig extends AppCompatActivity {
         String options = configMap.get("rs_options");
         String arg1 = configMap.get("rs_arg1");
         String arg2 = configMap.get("rs_arg2");
+        String rs_logfile="";
 
         TextView tv = this.vi.findViewById(R.id.tv_rs_cmd_View);
+        final SharedPreferences prefs =  context.getSharedPreferences("Rsync_Command_build", MODE_PRIVATE);
+        String log_path= prefs.getString("log",context.getApplicationInfo().dataDir+"/logfile.log");
 
-        String Rsync_command = "rsync " + "-" + options + " " + arg1 + " " + arg2;
+        if (cb_useLogFile.isChecked()) rs_logfile="--log-file="+log_path;
+
+        String Rsync_command = "rsync "+"-"+options+" "+rs_logfile+" "+arg1+" "+arg2;
         tv.setText(Rsync_command);
     }
 

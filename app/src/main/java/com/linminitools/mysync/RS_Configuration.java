@@ -17,7 +17,7 @@ import static com.linminitools.mysync.MainActivity.appContext;
 
 public class RS_Configuration {
 
-    protected String rs_ip, rs_user, rs_module, rs_options, local_path,name,rs_dest,arg1,arg2;
+    protected String rs_ip, rs_user, rs_module, rs_options,rs_logfile, local_path,name,rs_dest,arg1,arg2;
     protected String rs_port="873";
     protected int id, mode;
     protected boolean saved;
@@ -58,6 +58,7 @@ public class RS_Configuration {
             prefseditor.putString("rs_options_" + String.valueOf(this.id), rs_options);
             prefseditor.putString("arg1_" + String.valueOf(this.id), arg1);
             prefseditor.putString("arg2_" + String.valueOf(this.id), arg2);
+            prefseditor.putString("rs_logfile_" + String.valueOf(this.id), rs_logfile);
             prefseditor.putInt("mode_" + String.valueOf(this.id), mode);
             prefseditor.putString("last_result_" + String.valueOf(this.id), "Never Run");
             prefseditor.putString("last_run_" + String.valueOf(this.id), "Never Run");
@@ -94,6 +95,7 @@ public class RS_Configuration {
             prefseditor.remove("arg1_"+String.valueOf(this.id));
             prefseditor.remove("arg2_"+String.valueOf(this.id));
             prefseditor.remove("rs_options_"+String.valueOf(this.id));
+            prefseditor.remove("rs_logfile_"+String.valueOf(this.id));
             prefseditor.remove("mode_" + String.valueOf(this.id));
             prefseditor.remove("last_result_" + String.valueOf(this.id));
             prefseditor.remove("last_run_" + String.valueOf(this.id));
@@ -139,7 +141,7 @@ public class RS_Configuration {
 
                         if (mode==0) p = new ProcessBuilder(rsync_bin, options, "--log-file", log, local_path, cmd);
                         else if (mode==1) p = new ProcessBuilder(rsync_bin, options+"e","ssh", "--log-file", log, local_path, cmd);
-                        else if (mode==2) p=new ProcessBuilder(rsync_bin,rs_options,arg1,arg2);
+                        else if (mode==2) p=new ProcessBuilder(rsync_bin,"-"+rs_options,rs_logfile,arg1,arg2);
                         else p = new ProcessBuilder("echo","Wrong Command");
 
                         Map<String, String> env = p.environment();

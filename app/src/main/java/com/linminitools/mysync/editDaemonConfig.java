@@ -39,7 +39,7 @@ public class editDaemonConfig extends addDaemonConfig {
         Button bt_add = d.add_path;
         Button bt_exec = d.vi.findViewById(R.id.bt_execute);
         ImageButton rsync_help = d.rsync_help_button;
-        rsync_help.setImageResource(android.R.drawable.ic_menu_help);
+        rsync_help.setImageResource(R.drawable.help);
 
         save.setEnabled(true);
         view.setEnabled(true);
