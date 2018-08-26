@@ -2,11 +2,8 @@ package com.linminitools.mysync;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.security.KeyPairGeneratorSpec;
-import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,23 +15,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.security.auth.x500.X500Principal;
 
 import static com.linminitools.mysync.MainActivity.PackageName;
 import static com.linminitools.mysync.MainActivity.appContext;
 import static com.linminitools.mysync.MainActivity.configs;
-import static java.nio.CharBuffer.wrap;
 
 public class addRemoteShellConfig extends AppCompatActivity {
 
@@ -154,6 +140,7 @@ public class addRemoteShellConfig extends AppCompatActivity {
             config.rs_user = rs_user;
             config.rs_options = rs_options;
             config.local_path = local_path;
+            config.rs_dest = rs_dest;
             config.saveToDisk();
             configs.add(config);
             return true;

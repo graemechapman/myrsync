@@ -136,16 +136,20 @@ public class RS_Configuration {
                         pref_Edit.putBoolean("is_running",true);
                         pref_Edit.commit();
                         String rsync_bin= context.getSharedPreferences("Install",MODE_PRIVATE).getString("rsync_binary",".");
+                        String ssh_bin= context.getSharedPreferences("Install",MODE_PRIVATE).getString("ssh_binary",".");
+
+                        Log.d("RSYNC BINARY",rsync_bin);
+                        Log.d("SSH Binary", ssh_bin);
 
                         ProcessBuilder p;
 
                         if (mode==0) p = new ProcessBuilder(rsync_bin, options, "--log-file", log, local_path, cmd);
-                        else if (mode==1) p = new ProcessBuilder(rsync_bin, options+"e","ssh", "--log-file", log, local_path, cmd);
+                        else if (mode==1) p = new ProcessBuilder(rsync_bin, options,"-e","\"ssh\"", "--log-file", log, local_path, cmd);
                         else if (mode==2) p=new ProcessBuilder(rsync_bin,"-"+rs_options,rs_logfile,arg1,arg2);
                         else p = new ProcessBuilder("echo","Wrong Command");
 
                         Map<String, String> env = p.environment();
-                        env.put("PATH", "/su/bin:/sbin:/vendor/bin:/system/sbin:/system/bin:/su/xbin:/system/xbin");
+                        env.put("PATH", "context.getApplicationInfo().dataDir"+"/files:"+"/su/bin:/sbin:/vendor/bin:/system/sbin:/system/bin:/su/xbin:/system/xbin:");
                         p.directory(new File(context.getApplicationInfo().dataDir));
                         Process process=p.start();
 

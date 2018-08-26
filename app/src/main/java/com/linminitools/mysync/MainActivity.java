@@ -61,42 +61,24 @@ public class MainActivity extends AppCompatActivity {
         Boolean is_first_run = getSharedPreferences("Install",MODE_PRIVATE).getBoolean("first_run",true);
 
         if (is_first_run) {
+            String appFileDirectory = getFilesDir().getPath();
+            String rsyncFilePath = appFileDirectory + "/rsync";
+            String sshFilePath = appFileDirectory + "/ssh";
 
+            Log.d("IS_FIRST_RUN",rsyncFilePath);
+
+            File rsync_old_file = new File(rsyncFilePath);
+            rsync_old_file.delete();
+
+            File ssh_old_file = new File(sshFilePath);
+            ssh_old_file.delete();
+
+            getSharedPreferences("Install",MODE_PRIVATE).edit().putString("rsync_binary",rsyncFilePath).commit();
+            getSharedPreferences("Install",MODE_PRIVATE).edit().putString("ssh_binary",sshFilePath).commit();
+
+            create_binaries(rsyncFilePath,"rsync");
+            create_binaries(sshFilePath,"ssh");
             getSharedPreferences("Install",MODE_PRIVATE).edit().putBoolean("first_run",false).apply();
-            AssetManager AM = this.getAssets();
-
-            try {
-
-                String appFileDirectory = getFilesDir().getPath();
-                String executableFilePath = appFileDirectory + "/rsync";
-
-                File old_file = new File(executableFilePath);
-                old_file.delete();
-
-                getSharedPreferences("Install",MODE_PRIVATE).edit().putString("rsync_binary",executableFilePath).apply();
-
-                InputStream in = AM.open("rsync_binary/rsync", AssetManager.ACCESS_BUFFER);
-                Log.d("PATH", executableFilePath);
-                File rsync_executable = new File(executableFilePath);
-
-
-                FileOutputStream fos = new FileOutputStream(rsync_executable);
-                byte[] buffer = new byte[in.available()];
-
-                in.read(buffer);
-                in.close();
-
-                fos.write(buffer);
-
-                fos.close();
-                in.close();
-
-                rsync_executable.setExecutable(true);
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
 
@@ -625,6 +607,36 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+    }
+
+    private void create_binaries(String FilePath, String Filename){
+
+        AssetManager AM = this.getAssets();
+
+        try {
+
+            InputStream in = AM.open("bin/"+Filename, AssetManager.ACCESS_BUFFER);
+
+            File rsync_executable = new File(FilePath);
+
+            FileOutputStream fos = new FileOutputStream(rsync_executable);
+            byte[] buffer = new byte[in.available()];
+
+            in.read(buffer);
+            in.close();
+
+            fos.write(buffer);
+
+            fos.close();
+            in.close();
+
+            rsync_executable.setExecutable(true,false);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
